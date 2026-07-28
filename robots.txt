@@ -1,5 +1,4 @@
 User-agent: *
-
 Allow: /
 
-Sitemap: https://manofrancis-dev.github.io/portfolio/sitemap.xmlS
+Sitemap: https://manofrancis-dev.github.io/manofrancis-portfolio/sitemap.xml
