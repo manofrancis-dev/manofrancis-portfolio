@@ -1,122 +1,146 @@
-/**
- * Application Controller Logic & Mobile Interactive Modules
- * Mano Francis Portfolio
- */
-
 document.addEventListener('DOMContentLoaded', () => {
 
-    /* ==========================================================================
-       1. Mobile Menu Navigation Toggle
-       ========================================================================== */
-    const mobileMenuBtn = document.getElementById('mobileMenuBtn');
-    const navMenuLinks = document.getElementById('navMenuLinks');
-    const navLinks = document.querySelectorAll('.nav-item-link, .nav-cta-btn');
+    // ==========================================================================
+    // Part A: Interactive Mouse-Chase Glow Aura Engine (Optimized via rAF)
+    // ==========================================================================
+    const glowOrbElement = document.getElementById('heroGlowOrb');
 
-    if (mobileMenuBtn && navMenuLinks) {
-        mobileMenuBtn.addEventListener('click', () => {
-            const isExpanded = mobileMenuBtn.getAttribute('aria-expanded') === 'true';
-            mobileMenuBtn.setAttribute('aria-expanded', !isExpanded);
-            navMenuLinks.classList.toggle('active');
+    if (glowOrbElement) {
+        let mouseX = 0;
+        let mouseY = 0;
+        let isTicking = false;
+
+        window.addEventListener('mousemove', (event) => {
+            mouseX = event.clientX - 300;
+            mouseY = event.clientY - 300;
+
+            if (!isTicking) {
+                window.requestAnimationFrame(() => {
+                    glowOrbElement.style.transform = `translate3d(${mouseX}px, ${mouseY}px, 0)`;
+                    isTicking = false;
+                });
+                isTicking = true;
+            }
         });
+    }
 
-        // Close menu when link is clicked
-        navLinks.forEach(link => {
+    // ==========================================================================
+    // Part B: High-Performance Scroll Reveal Intersection Observer
+    // ==========================================================================
+    const revealTargetNodes = document.querySelectorAll('.reveal-on-scroll');
+
+    const observerConfigOptions = {
+        root: null,
+        threshold: 0.12,
+        rootMargin: '0px 0px -40px 0px'
+    };
+
+    const scrollIntersectionObserver = new IntersectionObserver((entries, observer) => {
+        entries.forEach(entry => {
+            if (entry.isIntersecting) {
+                entry.target.classList.add('active');
+                observer.unobserve(entry.target);
+            }
+        });
+    }, observerConfigOptions);
+
+    revealTargetNodes.forEach(node => {
+        scrollIntersectionObserver.observe(node);
+    });
+
+    // ==========================================================================
+    // Part C: Firebase Contact Form Handling Engine
+    // ==========================================================================
+    const gatewayFormElement = document.getElementById('contactForm');
+    const feedbackStatusOutput = document.getElementById('formStatus');
+
+    if (gatewayFormElement) {
+        gatewayFormElement.addEventListener('submit', async (event) => {
+            event.preventDefault();
+
+            const inputSenderName = document.getElementById('userName').value.trim();
+            const inputSenderEmail = document.getElementById('userEmail').value.trim();
+            const inputSenderMessage = document.getElementById('userMessage').value.trim();
+
+            if (!inputSenderName || !inputSenderEmail || !inputSenderMessage) {
+                renderFormFeedback('All fields are strictly required for security validation.', 'error');
+                return;
+            }
+
+            if (!window.FirebaseEngine) {
+                renderFormFeedback('System Error: Database connection layer not initialized.', 'error');
+                return;
+            }
+
+            try {
+                const { getFirestore, collection, addDoc, serverTimestamp } = window.FirebaseEngine;
+                const db = getFirestore();
+
+                await addDoc(collection(db, 'messages'), {
+                    name: inputSenderName,
+                    email: inputSenderEmail,
+                    message: inputSenderMessage,
+                    timestamp: serverTimestamp()
+                });
+
+                renderFormFeedback('Transmission successful! Connection gateway secured.', 'success');
+                gatewayFormElement.reset();
+
+            } catch (runtimeError) {
+                console.error("Database Write Rejection Details: ", runtimeError);
+                renderFormFeedback('Data transmission rejected. Check your connection metrics.', 'error');
+            }
+        });
+    }
+
+    function renderFormFeedback(dynamicMessage, feedbackStatusType) {
+        if (!feedbackStatusOutput) return;
+        
+        feedbackStatusOutput.textContent = dynamicMessage;
+        feedbackStatusOutput.className = 'form-status-feedback-msg'; 
+        feedbackStatusOutput.classList.add(feedbackStatusType);
+
+        setTimeout(() => {
+            feedbackStatusOutput.textContent = '';
+            feedbackStatusOutput.className = 'form-status-feedback-msg';
+        }, 6000);
+    }
+
+    // ==========================================================================
+    // Part D: Mobile System Navigation Drawer Toggle Logic
+    // ==========================================================================
+    const menuToggleBtn = document.getElementById('mobileMenuBtn');
+    const menuLinksTray = document.getElementById('navMenuLinks');
+    const internalNavLinks = document.querySelectorAll('.nav-menu-links a');
+
+    if (menuToggleBtn && menuLinksTray) {
+        const toggleMenuContext = () => {
+            menuToggleBtn.classList.toggle('is-active');
+            menuLinksTray.classList.toggle('is-active');
+        };
+
+        menuToggleBtn.addEventListener('click', toggleMenuContext);
+
+        internalNavLinks.forEach(link => {
             link.addEventListener('click', () => {
-                navMenuLinks.classList.remove('active');
-                mobileMenuBtn.setAttribute('aria-expanded', 'false');
+                if (menuLinksTray.classList.contains('is-active')) {
+                    toggleMenuContext();
+                }
             });
         });
     }
 
-    /* ==========================================================================
-       2. Radial Mouse-Tracking Glow Orb Logic
-       ========================================================================== */
-    const heroGlowOrb = document.getElementById('heroGlowOrb');
-
-    if (heroGlowOrb) {
-        window.addEventListener('mousemove', (e) => {
-            heroGlowOrb.style.left = `${e.clientX}px`;
-            heroGlowOrb.style.top = `${e.clientY}px`;
-        });
-    }
-
-    /* ==========================================================================
-       3. Intersection Observer for Scroll Reveal Animations
-       ========================================================================== */
-    const revealElements = document.querySelectorAll('.reveal-on-scroll');
-
-    const revealObserver = new IntersectionObserver((entries, observer) => {
-        entries.forEach(entry => {
-            if (entry.isIntersecting) {
-                entry.target.classList.add('is-visible');
-                observer.unobserve(entry.target);
-            }
-        });
-    }, {
-        threshold: 0.15
-    });
-
-    revealElements.forEach(element => revealObserver.observe(element));
-
-    /* ==========================================================================
-       4. Certificate Auto-Swipe Logic for Mobile (2-Second Loop)
-       ========================================================================== */
-    const certGrid = document.querySelector('.certifications-3d-grid');
-    const certCards = document.querySelectorAll('.cert-card-3d');
-    
-    if (certGrid && certCards.length > 0) {
-        let currentIndex = 0;
-        let autoSwipeTimer = null;
-
-        const startAutoSwipe = () => {
-            // Activate only on mobile devices (<= 768px width)
-            if (window.innerWidth <= 768) {
-                if (!autoSwipeTimer) {
-                    autoSwipeTimer = setInterval(() => {
-                        currentIndex = (currentIndex + 1) % certCards.length; // Infinite cycle back to 0
-                        const cardWidth = certCards[0].offsetWidth + 16; // width + grid gap
-                        
-                        certGrid.scrollTo({
-                            left: currentIndex * cardWidth,
-                            behavior: 'smooth'
-                        });
-                    }, 2000); // 2 seconds interval
-                }
-            } else {
-                // Clear interval if viewport expands to desktop
-                if (autoSwipeTimer) {
-                    clearInterval(autoSwipeTimer);
-                    autoSwipeTimer = null;
-                }
-            }
-        };
-
-        // Initialize swipe trigger
-        startAutoSwipe();
-
-        // Update tracking on manual scroll
-        certGrid.addEventListener('scroll', () => {
-            if (window.innerWidth <= 768 && certCards[0].offsetWidth > 0) {
-                const cardWidth = certCards[0].offsetWidth + 16;
-                currentIndex = Math.round(certGrid.scrollLeft / cardWidth);
-            }
-        });
-
-        // Re-evaluate swipe mode on viewport resize
-        window.addEventListener('resize', startAutoSwipe);
-    }
-
-    /* ==========================================================================
-       5. Back To Top Trigger Button
-       ========================================================================== */
+    // ==========================================================================
+    // Part E: Premium Top-to-Bottom Window Scrolling Engine
+    // ==========================================================================
     const backToTopBtn = document.getElementById('backToTopBtn');
 
     if (backToTopBtn) {
         window.addEventListener('scroll', () => {
             if (window.scrollY > 400) {
-                backToTopBtn.classList.add('visible');
+                backToTopBtn.classList.add('is-visible');
             } else {
-                backToTopBtn.classList.remove('visible');
+                backToTopBtn.classList.remove('is-visible');
             }
         });
 
@@ -128,62 +152,61 @@ document.addEventListener('DOMContentLoaded', () => {
         });
     }
 
-    /* ==========================================================================
-       6. Contact Form Submission Engine with Firebase Support
-       ========================================================================== */
-    const contactForm = document.getElementById('contactForm');
-    const formStatus = document.getElementById('formStatus');
+    // ==========================================================================
+    // Part F: Dynamic 3D Card Interactive Tilt & Glare Tracking Engine
+    // ==========================================================================
+    const certCards = document.querySelectorAll('.cert-card-3d');
 
-    if (contactForm && formStatus) {
-        contactForm.addEventListener('submit', async (e) => {
-            e.preventDefault();
+    certCards.forEach(card => {
+        const glare = card.querySelector('.cert-glare');
 
-            const submitBtn = contactForm.querySelector('button[type="submit"]');
-            const originalBtnText = submitBtn.innerHTML;
+        card.addEventListener('mousemove', (e) => {
+            const rect = card.getBoundingClientRect();
+            const x = e.clientX - rect.left;
+            const y = e.clientY - rect.top;
+            
+            const centerX = rect.width / 2;
+            const centerY = rect.height / 2;
+            
+            const rotateX = ((y - centerY) / centerY) * -10;
+            const rotateY = ((x - centerX) / centerX) * 10;
 
-            const name = document.getElementById('userName').value.trim();
-            const email = document.getElementById('userEmail').value.trim();
-            const message = document.getElementById('userMessage').value.trim();
+            card.style.transform = `perspective(1000px) rotateX(${rotateX}deg) rotateY(${rotateY}deg) scale(1.02)`;
 
-            if (!name || !email || !message) {
-                formStatus.style.color = '#ef4444';
-                formStatus.textContent = 'Please complete all required fields.';
-                return;
-            }
-
-            try {
-                submitBtn.disabled = true;
-                submitBtn.innerHTML = '<span>Transmitting...</span>';
-                formStatus.style.color = '#9ca3af';
-                formStatus.textContent = 'Processing form payload...';
-
-                // Save message directly to Firebase Firestore
-                if (window.FirebaseEngine) {
-                    const db = window.FirebaseEngine.getFirestore();
-                    const messagesCollection = window.FirebaseEngine.collection(db, 'messages');
-                    
-                    await window.FirebaseEngine.addDoc(messagesCollection, {
-                        name: name,
-                        email: email,
-                        message: message,
-                        timestamp: window.FirebaseEngine.serverTimestamp()
-                    });
-
-                    formStatus.style.color = '#10b981';
-                    formStatus.textContent = 'Message transmitted successfully! I will contact you shortly.';
-                    contactForm.reset();
-                } else {
-                    throw new Error('Firebase Engine unavailable');
-                }
-            } catch (error) {
-                console.error('Submission Error:', error);
-                formStatus.style.color = '#ef4444';
-                formStatus.textContent = 'Unable to send message directly. Please email mj4682770@gmail.com.';
-            } finally {
-                submitBtn.disabled = false;
-                submitBtn.innerHTML = originalBtnText;
+            if (glare) {
+                glare.style.transform = `translate(${x - rect.width}px, ${y - rect.height}px)`;
             }
         });
-    }
 
+        card.addEventListener('mouseleave', () => {
+            card.style.transform = 'perspective(1000px) rotateX(0deg) rotateY(0deg) scale(1)';
+            if (glare) {
+                glare.style.transform = 'translate(0, 0)';
+            }
+        });
+    });
+
+    // ==========================================================================
+    // Part G: Scrollspy Active Link Navigation Highlighting
+    // ==========================================================================
+    const sections = document.querySelectorAll('section[id]');
+
+    window.addEventListener('scroll', () => {
+        const scrollY = window.scrollY;
+
+        sections.forEach(current => {
+            const sectionHeight = current.offsetHeight;
+            const sectionTop = current.offsetTop - 120;
+            const sectionId = current.getAttribute('id');
+            const navLink = document.querySelector(`.nav-menu-links a[href*="${sectionId}"]`);
+
+            if (navLink) {
+                if (scrollY > sectionTop && scrollY <= sectionTop + sectionHeight) {
+                    navLink.classList.add('is-active');
+                } else {
+                    navLink.classList.remove('is-active');
+                }
+            }
+        });
+    });
 });
