@@ -42,7 +42,6 @@ body {
     color: var(--color-primary-cobalt); 
 }
 
-/* Custom Vector Branding Layout Controls */
 .logo-vector-icon {
     color: var(--color-primary-cobalt);
     margin-right: 10px;
@@ -60,15 +59,13 @@ body {
     transform: rotate(-5deg) scale(1.05);
 }
 
-/* ==========================================================================
-   Dynamic Interactive Follow Glow Mesh Aura 
-   ========================================================================== */
+/* Dynamic Interactive Follow Glow Mesh Aura */
 .interactive-glow-orb {
     position: fixed;
     width: 600px;
     height: 600px;
     border-radius: 50%;
-    background: radial-gradient(circle, rgba(37, 99, 235, 0.12) 0%, transparent 70%);
+    background: radial-gradient(circle, rgba(37, 99, 235, 0.15) 0%, transparent 70%);
     top: 0;
     left: 0;
     z-index: -1;
@@ -76,12 +73,6 @@ body {
     transform: translate3d(-100%, -100%, 0);
     will-change: transform;
     transition: transform 0.08s ease-out;
-}
-
-@media (max-width: 768px) {
-    .interactive-glow-orb {
-        display: none !important;
-    }
 }
 
 .section-container {
@@ -97,9 +88,7 @@ body {
     }
 }
 
-/* ==========================================================================
-   Floating Clean Premium Glassmorphic Navbar & Hamburger Interface
-   ========================================================================== */
+/* Floating Navigation */
 .floating-nav {
     position: fixed; top: 0; left: 0; width: 100%; z-index: 1000;
     background: rgba(7, 10, 19, 0.75);
@@ -119,7 +108,7 @@ body {
     text-decoration: none; color: var(--text-muted-slate);
     font-weight: 500; font-size: 0.95rem; transition: var(--transition-base);
 }
-.nav-item-link:hover { color: var(--text-primary-high); }
+.nav-item-link:hover, .nav-item-link.is-active { color: var(--text-primary-high); }
 .nav-cta-btn {
     background: rgba(255, 255, 255, 0.04); border: 1px solid var(--border-glass-tint);
     padding: 10px 24px; border-radius: 30px; color: var(--text-primary-high);
@@ -171,6 +160,31 @@ body {
     .mobile-nav-toggle.is-active .bar:nth-child(1) { transform: translateY(8px) rotate(45deg); }
     .mobile-nav-toggle.is-active .bar:nth-child(2) { opacity: 0; }
     .mobile-nav-toggle.is-active .bar:nth-child(3) { transform: translateY(-8px) rotate(-45deg); }
+
+    /* Mobile Interactive Glow Enable */
+    .interactive-glow-orb {
+        display: block !important;
+    }
+
+    /* Mobile Certifications Horizontal Layout */
+    .certifications-3d-grid {
+        display: flex !important;
+        overflow-x: auto !important;
+        scroll-snap-type: x mandatory;
+        scroll-behavior: smooth;
+        -webkit-overflow-scrolling: touch;
+        gap: 20px;
+        padding-bottom: 20px;
+    }
+
+    .certifications-3d-grid::-webkit-scrollbar {
+        display: none;
+    }
+
+    .cert-card-3d {
+        flex: 0 0 85% !important;
+        scroll-snap-align: start;
+    }
 }
 
 .reveal-on-scroll {
@@ -183,9 +197,7 @@ body {
     transform: translateY(0);
 }
 
-/* ==========================================================================
-   Premium Split Hero Layout Grid Configuration
-   ========================================================================== */
+/* Hero Section Layout */
 .hero-module {
     min-height: 100vh; display: flex; align-items: center; justify-content: center;
     padding: 140px 0 60px 0;
@@ -338,9 +350,7 @@ body {
 .registry-certification-footer .reg-title { color: var(--color-primary-cobalt); font-weight: 600; }
 .white-highlight { color: var(--text-primary-high); font-weight: 600; }
 
-/* ==========================================================================
-   3D Certifications Matrix Layout & Interactive Card Styles
-   ========================================================================== */
+/* 3D Certifications Matrix Layout */
 .certifications-3d-grid {
     display: grid;
     grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
@@ -357,23 +367,17 @@ body {
     backdrop-filter: blur(16px);
     -webkit-backdrop-filter: blur(16px);
     transform-style: preserve-3d;
-    transition: transform 0.5s var(--easing-premium), 
-                border-color 0.5s var(--easing-premium), 
-                box-shadow 0.5s var(--easing-premium), 
-                background 0.5s var(--easing-premium);
+    transition: transform 0.5s var(--easing-premium), border-color 0.5s var(--easing-premium), box-shadow 0.5s var(--easing-premium);
     overflow: hidden;
     display: flex;
     flex-direction: column;
     justify-content: space-between;
-    cursor: pointer;
 }
 
-.cert-card-3d:hover,
-.cert-card-3d.active-tap {
+.cert-card-3d:hover {
     transform: translateY(-8px) rotateX(4deg) rotateY(-4deg) scale(1.02);
-    border-color: rgba(99, 102, 241, 0.45);
-    box-shadow: 0 20px 40px rgba(0, 0, 0, 0.5), 0 0 35px rgba(37, 99, 235, 0.25);
-    background: linear-gradient(135deg, rgba(37, 99, 235, 0.18) 0%, rgba(13, 20, 38, 0.65) 100%);
+    border-color: rgba(99, 102, 241, 0.35);
+    box-shadow: 0 20px 40px rgba(0, 0, 0, 0.5), 0 0 30px rgba(37, 99, 235, 0.15);
 }
 
 .cert-glare {
@@ -382,13 +386,12 @@ body {
     left: -100%;
     width: 300%;
     height: 300%;
-    background: radial-gradient(circle, rgba(255, 255, 255, 0.12) 0%, transparent 60%);
+    background: radial-gradient(circle, rgba(255, 255, 255, 0.08) 0%, transparent 60%);
     pointer-events: none;
     transition: transform 0.5s ease;
 }
 
-.cert-card-3d:hover .cert-glare,
-.cert-card-3d.active-tap .cert-glare {
+.cert-card-3d:hover .cert-glare {
     transform: translate(30%, 30%);
 }
 
@@ -463,31 +466,6 @@ body {
     transform: translateX(4px);
 }
 
-/* Mobile Horizontal Auto-Scroll Styles */
-@media (max-width: 768px) {
-    .certifications-3d-grid {
-        display: flex;
-        overflow-x: auto;
-        scroll-snap-type: x mandatory;
-        scroll-behavior: smooth;
-        -webkit-overflow-scrolling: touch;
-        padding-bottom: 25px;
-        padding-top: 10px;
-        gap: 20px;
-        scrollbar-width: none;
-    }
-
-    .certifications-3d-grid::-webkit-scrollbar {
-        display: none;
-    }
-
-    .cert-card-3d {
-        flex: 0 0 88%;
-        min-width: 88%;
-        scroll-snap-align: center;
-    }
-}
-
 .interactive-gateway-box {
     display: grid; grid-template-columns: 1fr 1fr; gap: 60px; background: var(--bg-surface-glass);
     border: 1px solid var(--border-glass-tint); border-radius: 16px; padding: 60px;
@@ -524,14 +502,7 @@ body {
 .form-status-feedback-msg.success { color: #34d399; }
 .form-status-feedback-msg.error { color: #f87171; }
 
-@keyframes softPulse {
-    0%, 100% { transform: scale(1); opacity: 1; }
-    50% { transform: scale(1.3); opacity: 0.6; }
-}
-
-/* ==========================================================================
-   Premium Global System Footer Style Section
-   ========================================================================== */
+/* System Footer */
 .system-footer {
     background: #04060d;
     border-top: 1px solid var(--border-glass-tint);
@@ -569,9 +540,7 @@ body {
 .footer-social-tray a { color: var(--text-muted-slate); font-size: 1.2rem; transition: var(--transition-base); }
 .footer-social-tray a:hover { color: var(--color-primary-cobalt); transform: translateY(-2px); }
 
-/* ==========================================================================
-   Premium Scroll back to Top Interface Trigger Layout
-   ========================================================================== */
+/* Scroll Back to Top Button */
 .scroll-top-trigger {
     position: fixed;
     bottom: 30px;
@@ -613,19 +582,6 @@ body {
     transform: translateY(-3px);
 }
 
-@media (max-width: 480px) {
-    .scroll-top-trigger {
-        bottom: 20px;
-        right: 20px;
-        width: 42px;
-        height: 42px;
-        font-size: 1rem;
-    }
-}
-
-/* ==========================================================================
-   Fluid Responsive Scaling Overrides
-   ========================================================================== */
 @media (max-width: 1024px) {
     .hero-split-grid { grid-template-columns: 1fr; gap: 50px; text-align: center; padding-top: 40px; }
     .hero-text-align-left { text-align: center; order: 2; }
@@ -644,4 +600,11 @@ body {
     .avatar-glass-frame { width: 240px; height: 310px; }
     .footer-container { padding: 0 20px; }
     .footer-top-row { flex-direction: column; }
+    .scroll-top-trigger {
+        bottom: 20px;
+        right: 20px;
+        width: 42px;
+        height: 42px;
+        font-size: 1rem;
+    }
 }
