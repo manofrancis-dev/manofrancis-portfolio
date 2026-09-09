@@ -1,11 +1,13 @@
 document.addEventListener('DOMContentLoaded', () => {
 
+    const isMobileDevice = window.innerWidth <= 768 || 'ontouchstart' in window;
+
     // ==========================================================================
-    // Part A: Interactive Mouse-Chase Glow Aura Engine (Optimized via rAF)
+    // Part A: Interactive Glow Aura Engine (Optimized for Mobile Performance)
     // ==========================================================================
     const glowOrbElement = document.getElementById('heroGlowOrb');
 
-    if (glowOrbElement) {
+    if (glowOrbElement && !isMobileDevice) {
         let mouseX = 0;
         let mouseY = 0;
         let isTicking = false;
@@ -31,8 +33,8 @@ document.addEventListener('DOMContentLoaded', () => {
 
     const observerConfigOptions = {
         root: null,
-        threshold: 0.12,
-        rootMargin: '0px 0px -40px 0px'
+        threshold: isMobileDevice ? 0.05 : 0.12, // Faster triggers on mobile scroll
+        rootMargin: '0px 0px -20px 0px'
     };
 
     const scrollIntersectionObserver = new IntersectionObserver((entries, observer) => {
@@ -63,12 +65,12 @@ document.addEventListener('DOMContentLoaded', () => {
             const inputSenderMessage = document.getElementById('userMessage').value.trim();
 
             if (!inputSenderName || !inputSenderEmail || !inputSenderMessage) {
-                renderFormFeedback('All fields are strictly required for security validation.', 'error');
+                renderFormFeedback('All fields are required.', 'error');
                 return;
             }
 
             if (!window.FirebaseEngine) {
-                renderFormFeedback('System Error: Database connection layer not initialized.', 'error');
+                renderFormFeedback('System Error: Database connection layer missing.', 'error');
                 return;
             }
 
@@ -83,12 +85,12 @@ document.addEventListener('DOMContentLoaded', () => {
                     timestamp: serverTimestamp()
                 });
 
-                renderFormFeedback('Transmission successful! Connection gateway secured.', 'success');
+                renderFormFeedback('Transmission successful! Message sent.', 'success');
                 gatewayFormElement.reset();
 
             } catch (runtimeError) {
-                console.error("Database Write Rejection Details: ", runtimeError);
-                renderFormFeedback('Data transmission rejected. Check your connection metrics.', 'error');
+                console.error("Database Error: ", runtimeError);
+                renderFormFeedback('Data transmission rejected. Try again.', 'error');
             }
         });
     }
@@ -103,11 +105,11 @@ document.addEventListener('DOMContentLoaded', () => {
         setTimeout(() => {
             feedbackStatusOutput.textContent = '';
             feedbackStatusOutput.className = 'form-status-feedback-msg';
-        }, 6000);
+        }, 5000);
     }
 
     // ==========================================================================
-    // Part D: Mobile System Navigation Drawer Toggle Logic
+    // Part D: Mobile Drawer Navigation Logic (Body Lock + Smooth Toggle)
     // ==========================================================================
     const menuToggleBtn = document.getElementById('mobileMenuBtn');
     const menuLinksTray = document.getElementById('navMenuLinks');
@@ -115,8 +117,9 @@ document.addEventListener('DOMContentLoaded', () => {
 
     if (menuToggleBtn && menuLinksTray) {
         const toggleMenuContext = () => {
+            const isActive = menuLinksTray.classList.toggle('is-active');
             menuToggleBtn.classList.toggle('is-active');
-            menuLinksTray.classList.toggle('is-active');
+            document.body.style.overflow = isActive ? 'hidden' : ''; // Prevent body background scrolling when drawer is open
         };
 
         menuToggleBtn.addEventListener('click', toggleMenuContext);
@@ -131,18 +134,18 @@ document.addEventListener('DOMContentLoaded', () => {
     }
 
     // ==========================================================================
-    // Part E: Premium Top-to-Bottom Window Scrolling Engine
+    // Part E: Top-to-Bottom Window Scrolling Engine
     // ==========================================================================
     const backToTopBtn = document.getElementById('backToTopBtn');
 
     if (backToTopBtn) {
         window.addEventListener('scroll', () => {
-            if (window.scrollY > 400) {
+            if (window.scrollY > 300) {
                 backToTopBtn.classList.add('is-visible');
             } else {
                 backToTopBtn.classList.remove('is-visible');
             }
-        });
+        }, { passive: true });
 
         backToTopBtn.addEventListener('click', () => {
             window.scrollTo({
@@ -153,41 +156,43 @@ document.addEventListener('DOMContentLoaded', () => {
     }
 
     // ==========================================================================
-    // Part F: Dynamic 3D Card Interactive Tilt & Glare Tracking Engine
+    // Part F: Dynamic 3D Card Interactive Tilt (Disabled on Mobile for Speed)
     // ==========================================================================
     const certCards = document.querySelectorAll('.cert-card-3d');
 
-    certCards.forEach(card => {
-        const glare = card.querySelector('.cert-glare');
+    if (!isMobileDevice) {
+        certCards.forEach(card => {
+            const glare = card.querySelector('.cert-glare');
 
-        card.addEventListener('mousemove', (e) => {
-            const rect = card.getBoundingClientRect();
-            const x = e.clientX - rect.left;
-            const y = e.clientY - rect.top;
-            
-            const centerX = rect.width / 2;
-            const centerY = rect.height / 2;
-            
-            const rotateX = ((y - centerY) / centerY) * -10;
-            const rotateY = ((x - centerX) / centerX) * 10;
+            card.addEventListener('mousemove', (e) => {
+                const rect = card.getBoundingClientRect();
+                const x = e.clientX - rect.left;
+                const y = e.clientY - rect.top;
+                
+                const centerX = rect.width / 2;
+                const centerY = rect.height / 2;
+                
+                const rotateX = ((y - centerY) / centerY) * -10;
+                const rotateY = ((x - centerX) / centerX) * 10;
 
-            card.style.transform = `perspective(1000px) rotateX(${rotateX}deg) rotateY(${rotateY}deg) scale(1.02)`;
+                card.style.transform = `perspective(1000px) rotateX(${rotateX}deg) rotateY(${rotateY}deg) scale(1.02)`;
 
-            if (glare) {
-                glare.style.transform = `translate(${x - rect.width}px, ${y - rect.height}px)`;
-            }
+                if (glare) {
+                    glare.style.transform = `translate(${x - rect.width}px, ${y - rect.height}px)`;
+                }
+            });
+
+            card.addEventListener('mouseleave', () => {
+                card.style.transform = 'perspective(1000px) rotateX(0deg) rotateY(0deg) scale(1)';
+                if (glare) {
+                    glare.style.transform = 'translate(0, 0)';
+                }
+            });
         });
-
-        card.addEventListener('mouseleave', () => {
-            card.style.transform = 'perspective(1000px) rotateX(0deg) rotateY(0deg) scale(1)';
-            if (glare) {
-                glare.style.transform = 'translate(0, 0)';
-            }
-        });
-    });
+    }
 
     // ==========================================================================
-    // Part G: Scrollspy Active Link Navigation Highlighting
+    // Part G: Scrollspy Navigation
     // ==========================================================================
     const sections = document.querySelectorAll('section[id]');
 
@@ -208,5 +213,5 @@ document.addEventListener('DOMContentLoaded', () => {
                 }
             }
         });
-    });
+    }, { passive: true });
 });
