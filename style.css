@@ -357,17 +357,23 @@ body {
     backdrop-filter: blur(16px);
     -webkit-backdrop-filter: blur(16px);
     transform-style: preserve-3d;
-    transition: transform 0.5s var(--easing-premium), border-color 0.5s var(--easing-premium), box-shadow 0.5s var(--easing-premium);
+    transition: transform 0.5s var(--easing-premium), 
+                border-color 0.5s var(--easing-premium), 
+                box-shadow 0.5s var(--easing-premium), 
+                background 0.5s var(--easing-premium);
     overflow: hidden;
     display: flex;
     flex-direction: column;
     justify-content: space-between;
+    cursor: pointer;
 }
 
-.cert-card-3d:hover {
+.cert-card-3d:hover,
+.cert-card-3d.active-tap {
     transform: translateY(-8px) rotateX(4deg) rotateY(-4deg) scale(1.02);
-    border-color: rgba(99, 102, 241, 0.35);
-    box-shadow: 0 20px 40px rgba(0, 0, 0, 0.5), 0 0 30px rgba(37, 99, 235, 0.15);
+    border-color: rgba(99, 102, 241, 0.45);
+    box-shadow: 0 20px 40px rgba(0, 0, 0, 0.5), 0 0 35px rgba(37, 99, 235, 0.25);
+    background: linear-gradient(135deg, rgba(37, 99, 235, 0.18) 0%, rgba(13, 20, 38, 0.65) 100%);
 }
 
 .cert-glare {
@@ -376,12 +382,13 @@ body {
     left: -100%;
     width: 300%;
     height: 300%;
-    background: radial-gradient(circle, rgba(255, 255, 255, 0.08) 0%, transparent 60%);
+    background: radial-gradient(circle, rgba(255, 255, 255, 0.12) 0%, transparent 60%);
     pointer-events: none;
     transition: transform 0.5s ease;
 }
 
-.cert-card-3d:hover .cert-glare {
+.cert-card-3d:hover .cert-glare,
+.cert-card-3d.active-tap .cert-glare {
     transform: translate(30%, 30%);
 }
 
@@ -454,6 +461,31 @@ body {
     border-color: var(--color-primary-cobalt);
     color: #ffffff;
     transform: translateX(4px);
+}
+
+/* Mobile Horizontal Auto-Scroll Styles */
+@media (max-width: 768px) {
+    .certifications-3d-grid {
+        display: flex;
+        overflow-x: auto;
+        scroll-snap-type: x mandatory;
+        scroll-behavior: smooth;
+        -webkit-overflow-scrolling: touch;
+        padding-bottom: 25px;
+        padding-top: 10px;
+        gap: 20px;
+        scrollbar-width: none;
+    }
+
+    .certifications-3d-grid::-webkit-scrollbar {
+        display: none;
+    }
+
+    .cert-card-3d {
+        flex: 0 0 88%;
+        min-width: 88%;
+        scroll-snap-align: center;
+    }
 }
 
 .interactive-gateway-box {
