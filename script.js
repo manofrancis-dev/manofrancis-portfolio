@@ -153,13 +153,14 @@ document.addEventListener('DOMContentLoaded', () => {
     }
 
     // ==========================================================================
-    // Part F: Dynamic 3D Card Interactive Tilt & Glare Tracking Engine
+    // Part F: Dynamic 3D Card Hover & Mobile Click Background Effect Engine
     // ==========================================================================
     const certCards = document.querySelectorAll('.cert-card-3d');
 
     certCards.forEach(card => {
         const glare = card.querySelector('.cert-glare');
 
+        // Laptop / Desktop Mouse Hover Effect
         card.addEventListener('mousemove', (e) => {
             const rect = card.getBoundingClientRect();
             const x = e.clientX - rect.left;
@@ -182,6 +183,29 @@ document.addEventListener('DOMContentLoaded', () => {
             card.style.transform = 'perspective(1000px) rotateX(0deg) rotateY(0deg) scale(1)';
             if (glare) {
                 glare.style.transform = 'translate(0, 0)';
+            }
+        });
+
+        // Mobile Click / Tap Background Effect Logic
+        card.addEventListener('click', () => {
+            // Reset other cards
+            certCards.forEach(c => {
+                if (c !== card) {
+                    c.classList.remove('active-tap');
+                    c.style.transform = 'perspective(1000px) rotateX(0deg) rotateY(0deg) scale(1)';
+                    const otherGlare = c.querySelector('.cert-glare');
+                    if (otherGlare) otherGlare.style.transform = 'translate(0, 0)';
+                }
+            });
+
+            // Toggle background effect on current card
+            const isTapped = card.classList.toggle('active-tap');
+            if (isTapped) {
+                card.style.transform = 'perspective(1000px) rotateX(4deg) rotateY(-4deg) scale(1.02)';
+                if (glare) glare.style.transform = 'translate(30%, 30%)';
+            } else {
+                card.style.transform = 'perspective(1000px) rotateX(0deg) rotateY(0deg) scale(1)';
+                if (glare) glare.style.transform = 'translate(0, 0)';
             }
         });
     });
@@ -209,4 +233,49 @@ document.addEventListener('DOMContentLoaded', () => {
             }
         });
     });
+
+    // ==========================================================================
+    // Part H: Mobile Horizontal Auto-Swipe Engine (Every 2 Seconds Loop)
+    // ==========================================================================
+    const certGridContainer = document.querySelector('.certifications-3d-grid');
+
+    if (certGridContainer) {
+        let autoSwipeTimer = null;
+
+        const runAutoSwipe = () => {
+            if (window.innerWidth <= 768) {
+                if (autoSwipeTimer) clearInterval(autoSwipeTimer);
+
+                autoSwipeTimer = setInterval(() => {
+                    const firstCard = certGridContainer.querySelector('.cert-card-3d');
+                    if (!firstCard) return;
+
+                    const cardGap = 20; // Horizontal gap between cards
+                    const scrollAmount = firstCard.offsetWidth + cardGap;
+                    const maxScrollLeft = certGridContainer.scrollWidth - certGridContainer.clientWidth;
+
+                    // If reaching the end, instantly reset back to beginning
+                    if (certGridContainer.scrollLeft >= maxScrollLeft - 10) {
+                        certGridContainer.scrollTo({ left: 0, behavior: 'smooth' });
+                    } else {
+                        certGridContainer.scrollBy({ left: scrollAmount, behavior: 'smooth' });
+                    }
+                }, 2000); // 2 Seconds Interval
+            } else {
+                if (autoSwipeTimer) clearInterval(autoSwipeTimer);
+            }
+        };
+
+        runAutoSwipe();
+        window.addEventListener('resize', runAutoSwipe);
+
+        // Pause auto-swipe temporarily on user touch
+        certGridContainer.addEventListener('touchstart', () => {
+            if (autoSwipeTimer) clearInterval(autoSwipeTimer);
+        }, { passive: true });
+
+        certGridContainer.addEventListener('touchend', () => {
+            runAutoSwipe();
+        }, { passive: true });
+    }
 });
