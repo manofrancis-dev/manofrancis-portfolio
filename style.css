@@ -809,3 +809,79 @@ body {
         height: 300px;
     }
 }
+
+/* ==========================================================================
+   MOBILE LIVE UI/UX ENHANCEMENTS & SMOOTH CERTIFICATE MOTION
+   ========================================================================== */
+
+/* Live Ambient Shimmer & Breathing Animations */
+@keyframes liveShimmer {
+    0% { background-position: 0% 50%; }
+    50% { background-position: 100% 50%; }
+    100% { background-position: 0% 50%; }
+}
+
+@keyframes gentleFloatMobile {
+    0%, 100% { transform: translateY(0px); }
+    50% { transform: translateY(-6px); }
+}
+
+@media (max-width: 768px) {
+    /* 1. Horizontal Scroll Track for Certificates with Snap Alignment */
+    .certifications-3d-grid {
+        display: flex !important;
+        grid-template-columns: none !important;
+        overflow-x: auto !important;
+        scroll-snap-type: x mandatory;
+        gap: 16px !important;
+        padding: 10px 4px 20px 4px;
+        -webkit-overflow-scrolling: touch;
+        scrollbar-width: none; /* Hide scrollbar for Firefox */
+    }
+
+    .certifications-3d-grid::-webkit-scrollbar {
+        display: none; /* Hide scrollbar for Chrome/Safari */
+    }
+
+    /* 2. Certificate Cards: Continuous Staggered Floating & Ambient Shimmer */
+    .cert-card-3d {
+        min-width: 82vw !important;
+        max-width: 320px !important;
+        flex-shrink: 0;
+        scroll-snap-align: center;
+        background: linear-gradient(135deg, rgba(13, 20, 38, 0.6), rgba(37, 99, 235, 0.12), rgba(13, 20, 38, 0.6));
+        background-size: 200% 200%;
+        animation: gentleFloatMobile 5s ease-in-out infinite, liveShimmer 9s ease infinite;
+        border-color: rgba(99, 102, 241, 0.25);
+    }
+
+    /* Stagger alternate certificates so they float out of sync */
+    .cert-card-3d:nth-child(even) {
+        animation-delay: -2.5s, -4.5s;
+    }
+
+    /* 3. Ambient Breathing Glass Effect on Primary Containers */
+    .interactive-surface,
+    .stack-card,
+    .interactive-gateway-box {
+        background: linear-gradient(135deg, rgba(13, 20, 38, 0.5), rgba(99, 102, 241, 0.08), rgba(13, 20, 38, 0.5));
+        background-size: 200% 200%;
+        animation: liveShimmer 12s ease infinite;
+    }
+
+    /* 4. Responsive Micro-Interaction Feedback on Touch */
+    .action-btn:active,
+    .cert-btn:active,
+    .showcase-card:active,
+    .interactive-surface:active {
+        transform: scale(0.97) !important;
+        transition: transform 0.15s cubic-bezier(0.16, 1, 0.3, 1);
+    }
+
+    /* 5. Live Pulse on Status & Verification Badges */
+    .verify-badge,
+    .timeline-badge-date {
+        display: inline-block;
+        animation: softPulse 3s ease-in-out infinite;
+    }
+}
