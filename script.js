@@ -214,4 +214,42 @@ document.addEventListener('DOMContentLoaded', () => {
             }
         });
     }, { passive: true });
+
+    // ==========================================================================
+    // Part H: Mobile Certificates Infinite Horizontal Auto-Scroll Engine
+    // ==========================================================================
+    const certContainer = document.querySelector('.certifications-3d-grid');
+
+    if (certContainer) {
+        let isUserInteracting = false;
+        let pauseTimeout = null;
+        const scrollStep = 1;
+        const scrollSpeedMs = 25;
+
+        const handleInteractionStart = () => {
+            isUserInteracting = true;
+            if (pauseTimeout) clearTimeout(pauseTimeout);
+        };
+
+        const handleInteractionEnd = () => {
+            pauseTimeout = setTimeout(() => {
+                isUserInteracting = false;
+            }, 2000); // Resumes movement 2 seconds after user lets go
+        };
+
+        certContainer.addEventListener('touchstart', handleInteractionStart, { passive: true });
+        certContainer.addEventListener('touchend', handleInteractionEnd, { passive: true });
+        certContainer.addEventListener('touchcancel', handleInteractionEnd, { passive: true });
+
+        setInterval(() => {
+            if (window.innerWidth <= 768 && !isUserInteracting) {
+                if (certContainer.scrollLeft + certContainer.clientWidth >= certContainer.scrollWidth - 2) {
+                    certContainer.scrollLeft = 0; // Reset back to start when reaching the end
+                } else {
+                    certContainer.scrollLeft += scrollStep;
+                }
+            }
+        }, scrollSpeedMs);
+    }
+
 });
