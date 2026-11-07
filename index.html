@@ -1,3 +1,36 @@
+Ran fetch forma webpage metadata · Exited with code 1
+Searched "manofrancis-dev.github.io/forma" OR "github.com/manofrancis-dev/forma"
+Searched site:github.com/manofrancis-dev/forma
+Searched "manofrancis-dev.github.io/forma" "Forma"
+Ran list workspace files
+
+Here is your updated portfolio code with your new project **Forma** added to both the **Projects Showcase Grid** and the **JSON-LD Schema (`ItemList`)** for Google SEO indexing.
+
+---
+
+### 1. Snippet Added to the Projects Grid (`#projects`)
+
+```html
+                    <!-- Project: Forma -->
+                    <article class="showcase-card interactive-surface">
+                        <div class="showcase-meta-header">FASHION E-COMMERCE STOREFRONT • LIVE</div>
+                        <h3 class="showcase-title">Forma — Everyday Fashion &amp; Apparel Storefront</h3>
+                        <p class="showcase-desc">A modern fashion e-commerce web platform featuring curated multi-category apparel collections, dynamic category filtering, interactive product sorting, responsive catalog design, and seamless shopping UX.</p>
+                        <div class="showcase-tech-tokens">
+                            <span>E-Commerce UI</span><span>JavaScript (ES6+)</span><span>Responsive Design</span><span>Interactive Catalog</span>
+                        </div>
+                        <div class="showcase-proof-line" aria-label="Project evidence">Live demo available · Modern apparel storefront</div>
+                        <a href="https://manofrancis-dev.github.io/forma/" target="_blank" rel="noopener noreferrer" class="showcase-hyperlink" aria-label="Open the live Forma e-commerce project page">
+                            View Live Project <i class="fa-solid fa-arrow-up-right-from-square"></i>
+                        </a>
+                    </article>
+```
+
+---
+
+### 2. Complete Updated `index.html`
+
+```html
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -92,18 +125,24 @@
         {
           "@type": "ListItem",
           "position": 2,
+          "name": "Forma — Everyday Fashion & Apparel Storefront",
+          "url": "https://manofrancis-dev.github.io/forma/"
+        },
+        {
+          "@type": "ListItem",
+          "position": 3,
           "name": "Professional Architecture Portfolio v2",
           "url": "https://github.com/manofrancis-dev/manofrancis-portfolio"
         },
         {
           "@type": "ListItem",
-          "position": 3,
+          "position": 4,
           "name": "AirMouse Pro",
           "url": "https://manofrancis-dev.github.io/airmousepro/"
         },
         {
           "@type": "ListItem",
-          "position": 4,
+          "position": 5,
           "name": "Anti-Theft Security",
           "url": "https://manofrancis-dev.github.io/anti-theft-security/"
         }
@@ -305,7 +344,21 @@
                         </a>
                     </article>
 
-                    <!-- Project 2 -->
+                    <!-- Project 2 (Forma) -->
+                    <article class="showcase-card interactive-surface">
+                        <div class="showcase-meta-header">FASHION E-COMMERCE STOREFRONT • LIVE</div>
+                        <h3 class="showcase-title">Forma — Everyday Fashion &amp; Apparel Storefront</h3>
+                        <p class="showcase-desc">A modern fashion e-commerce web platform featuring curated multi-category apparel collections, dynamic category filtering, interactive product sorting, responsive catalog design, and seamless shopping UX.</p>
+                        <div class="showcase-tech-tokens">
+                            <span>E-Commerce UI</span><span>JavaScript (ES6+)</span><span>Responsive Design</span><span>Interactive Catalog</span>
+                        </div>
+                        <div class="showcase-proof-line" aria-label="Project evidence">Live demo available · Modern apparel storefront</div>
+                        <a href="https://manofrancis-dev.github.io/forma/" target="_blank" rel="noopener noreferrer" class="showcase-hyperlink" aria-label="Open the live Forma e-commerce project page">
+                            View Live Project <i class="fa-solid fa-arrow-up-right-from-square"></i>
+                        </a>
+                    </article>
+
+                    <!-- Project 3 -->
                     <article class="showcase-card interactive-surface">
                         <div class="showcase-meta-header">IDENTITY DEPLOYMENT PROFILE • LIVE</div>
                         <h3 class="showcase-title">Professional Architecture Portfolio v2</h3>
@@ -318,7 +371,7 @@
                         </a>
                     </article>
 
-                    <!-- Project 3 -->
+                    <!-- Project 4 -->
                     <article class="showcase-card interactive-surface">
                         <div class="showcase-meta-header">WINDOWS GESTURE CONTROL SYSTEM • LIVE</div>
                         <h3 class="showcase-title">AirMouse Pro</h3>
@@ -332,7 +385,7 @@
                         </a>
                     </article>
 
-                    <!-- Project 4 -->
+                    <!-- Project 5 -->
                     <article class="showcase-card interactive-surface">
                         <div class="showcase-meta-header">ANDROID DEVICE PROTECTION SYSTEM • LIVE</div>
                         <h3 class="showcase-title">Anti-Theft Security</h3>
@@ -519,3 +572,4 @@
     <script src="script.js" defer></script>
 </body>
 </html>
+```
