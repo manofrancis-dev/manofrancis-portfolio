@@ -231,6 +231,7 @@ body {
     position: relative;
     display: inline-block;
     box-shadow: 0 0 8px #10b981;
+    flex-shrink: 0;
 }
 
 .pulse-indicator::after {
