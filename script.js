@@ -1,61 +1,85 @@
 document.addEventListener('DOMContentLoaded', () => {
 
     // ==========================================================================
-    // Part A: Interactive Mouse-Chase & Mobile Click/Touch Glow Aura Engine
+    // Part 1: Next-Gen Dual-Ring Interactive Custom Cursor Engine
     // ==========================================================================
-    const glowOrbElement = document.getElementById('heroGlowOrb');
+    const cursorDot = document.getElementById('cursorDot');
+    const cursorOutline = document.getElementById('cursorOutline');
 
-    if (glowOrbElement) {
-        let mouseX = 0;
-        let mouseY = 0;
-        let isTicking = false;
+    if (cursorDot && cursorOutline) {
+        let mouseX = window.innerWidth / 2;
+        let mouseY = window.innerHeight / 2;
+        let outlineX = mouseX;
+        let outlineY = mouseY;
 
-        const updateGlowPosition = (clientX, clientY) => {
-            mouseX = clientX - 300;
-            mouseY = clientY - 300;
+        // Track exact cursor position
+        window.addEventListener('mousemove', (e) => {
+            mouseX = e.clientX;
+            mouseY = e.clientY;
+            cursorDot.style.left = `${mouseX}px`;
+            cursorDot.style.top = `${mouseY}px`;
+        });
 
-            if (!isTicking) {
-                window.requestAnimationFrame(() => {
-                    glowOrbElement.style.transform = `translate3d(${mouseX}px, ${mouseY}px, 0)`;
-                    isTicking = false;
-                });
-                isTicking = true;
-            }
+        // Silky-smooth trailing spring interpolation for the halo outline
+        const renderCursorPhysics = () => {
+            outlineX += (mouseX - outlineX) * 0.18;
+            outlineY += (mouseY - outlineY) * 0.18;
+            cursorOutline.style.left = `${outlineX}px`;
+            cursorOutline.style.top = `${outlineY}px`;
+            requestAnimationFrame(renderCursorPhysics);
         };
+        renderCursorPhysics();
 
-        // Laptop Mouse Hover
-        window.addEventListener('mousemove', (event) => {
-            updateGlowPosition(event.clientX, event.clientY);
-        });
+        // Magnetic hover magnification on interactive targets
+        const interactiveTargets = document.querySelectorAll(
+            'a, button, input, textarea, .interactive-surface, .showcase-card, .cert-card-3d, .avatar-glass-frame, .stack-card'
+        );
 
-        // Mobile Full Body Click / Touch Interaction
-        window.addEventListener('click', (event) => {
-            updateGlowPosition(event.clientX, event.clientY);
-        });
-
-        window.addEventListener('touchstart', (event) => {
-            if (event.touches.length > 0) {
-                updateGlowPosition(event.touches[0].clientX, event.touches[0].clientY);
-            }
-        });
-
-        window.addEventListener('touchmove', (event) => {
-            if (event.touches.length > 0) {
-                updateGlowPosition(event.touches[0].clientX, event.touches[0].clientY);
-            }
+        interactiveTargets.forEach(target => {
+            target.addEventListener('mouseenter', () => document.body.classList.add('cursor-hover'));
+            target.addEventListener('mouseleave', () => document.body.classList.remove('cursor-hover'));
         });
     }
 
     // ==========================================================================
-    // Part B: High-Performance Scroll Reveal Intersection Observer
+    // Part 2: Ambient Radial Glow Orb Engine (Desktop Mouse & Mobile Touch)
+    // ==========================================================================
+    const glowOrbElement = document.getElementById('heroGlowOrb');
+
+    if (glowOrbElement) {
+        let orbX = 0;
+        let orbY = 0;
+        let isOrbTicking = false;
+
+        const updateGlowPosition = (clientX, clientY) => {
+            orbX = clientX - 300;
+            orbY = clientY - 300;
+
+            if (!isOrbTicking) {
+                window.requestAnimationFrame(() => {
+                    glowOrbElement.style.transform = `translate3d(${orbX}px, ${orbY}px, 0)`;
+                    isOrbTicking = false;
+                });
+                isOrbTicking = true;
+            }
+        };
+
+        window.addEventListener('mousemove', (e) => updateGlowPosition(e.clientX, e.clientY));
+        window.addEventListener('click', (e) => updateGlowPosition(e.clientX, e.clientY));
+        
+        window.addEventListener('touchstart', (e) => {
+            if (e.touches.length > 0) updateGlowPosition(e.touches[0].clientX, e.touches[0].clientY);
+        }, { passive: true });
+
+        window.addEventListener('touchmove', (e) => {
+            if (e.touches.length > 0) updateGlowPosition(e.touches[0].clientX, e.touches[0].clientY);
+        }, { passive: true });
+    }
+
+    // ==========================================================================
+    // Part 3: High-Performance Scroll Reveal Intersection Observer
     // ==========================================================================
     const revealTargetNodes = document.querySelectorAll('.reveal-on-scroll');
-
-    const observerConfigOptions = {
-        root: null,
-        threshold: 0.12,
-        rootMargin: '0px 0px -40px 0px'
-    };
 
     const scrollIntersectionObserver = new IntersectionObserver((entries, observer) => {
         entries.forEach(entry => {
@@ -64,14 +88,16 @@ document.addEventListener('DOMContentLoaded', () => {
                 observer.unobserve(entry.target);
             }
         });
-    }, observerConfigOptions);
-
-    revealTargetNodes.forEach(node => {
-        scrollIntersectionObserver.observe(node);
+    }, {
+        root: null,
+        threshold: 0.12,
+        rootMargin: '0px 0px -40px 0px'
     });
 
+    revealTargetNodes.forEach(node => scrollIntersectionObserver.observe(node));
+
     // ==========================================================================
-    // Part C: Firebase Contact Form Handling Engine
+    // Part 4: Firebase Contact Form Handling Engine (Clear English Feedback)
     // ==========================================================================
     const gatewayFormElement = document.getElementById('contactForm');
     const feedbackStatusOutput = document.getElementById('formStatus');
@@ -85,14 +111,19 @@ document.addEventListener('DOMContentLoaded', () => {
             const inputSenderMessage = document.getElementById('userMessage').value.trim();
 
             if (!inputSenderName || !inputSenderEmail || !inputSenderMessage) {
-                renderFormFeedback('All fields are strictly required for security validation.', 'error');
+                renderFormFeedback('Please fill out all fields before sending.', 'error');
                 return;
             }
 
             if (!window.FirebaseEngine) {
-                renderFormFeedback('System Error: Database connection layer not initialized.', 'error');
+                renderFormFeedback('Unable to connect to the database right now. Please try again.', 'error');
                 return;
             }
+
+            const submitBtn = gatewayFormElement.querySelector('button[type="submit"]');
+            const originalBtnText = submitBtn.innerHTML;
+            submitBtn.disabled = true;
+            submitBtn.innerHTML = '<span>Sending Message...</span>';
 
             try {
                 const { getFirestore, collection, addDoc, serverTimestamp } = window.FirebaseEngine;
@@ -105,22 +136,25 @@ document.addEventListener('DOMContentLoaded', () => {
                     timestamp: serverTimestamp()
                 });
 
-                renderFormFeedback('Transmission successful! Connection gateway secured.', 'success');
+                renderFormFeedback('Thank you! Your message has been sent successfully.', 'success');
                 gatewayFormElement.reset();
 
             } catch (runtimeError) {
-                console.error("Database Write Rejection Details: ", runtimeError);
-                renderFormFeedback('Data transmission rejected. Check your connection metrics.', 'error');
+                console.error("Database Write Error: ", runtimeError);
+                renderFormFeedback('Failed to send message. Please check your internet connection and try again.', 'error');
+            } finally {
+                submitBtn.disabled = false;
+                submitBtn.innerHTML = originalBtnText;
             }
         });
     }
 
-    function renderFormFeedback(dynamicMessage, feedbackStatusType) {
+    function renderFormFeedback(message, statusType) {
         if (!feedbackStatusOutput) return;
         
-        feedbackStatusOutput.textContent = dynamicMessage;
+        feedbackStatusOutput.textContent = message;
         feedbackStatusOutput.className = 'form-status-feedback-msg'; 
-        feedbackStatusOutput.classList.add(feedbackStatusType);
+        feedbackStatusOutput.classList.add(statusType);
 
         setTimeout(() => {
             feedbackStatusOutput.textContent = '';
@@ -129,7 +163,7 @@ document.addEventListener('DOMContentLoaded', () => {
     }
 
     // ==========================================================================
-    // Part D: Mobile System Navigation Drawer Toggle Logic
+    // Part 5: Mobile Navigation Drawer Toggle Logic
     // ==========================================================================
     const menuToggleBtn = document.getElementById('mobileMenuBtn');
     const menuLinksTray = document.getElementById('navMenuLinks');
@@ -139,6 +173,7 @@ document.addEventListener('DOMContentLoaded', () => {
         const toggleMenuContext = () => {
             menuToggleBtn.classList.toggle('is-active');
             menuLinksTray.classList.toggle('is-active');
+            menuToggleBtn.setAttribute('aria-expanded', menuLinksTray.classList.contains('is-active'));
         };
 
         menuToggleBtn.addEventListener('click', toggleMenuContext);
@@ -153,7 +188,7 @@ document.addEventListener('DOMContentLoaded', () => {
     }
 
     // ==========================================================================
-    // Part E: Premium Top-to-Bottom Window Scrolling Engine
+    // Part 6: Smooth Scroll Back to Top Button
     // ==========================================================================
     const backToTopBtn = document.getElementById('backToTopBtn');
 
@@ -164,7 +199,7 @@ document.addEventListener('DOMContentLoaded', () => {
             } else {
                 backToTopBtn.classList.remove('is-visible');
             }
-        });
+        }, { passive: true });
 
         backToTopBtn.addEventListener('click', () => {
             window.scrollTo({
@@ -175,11 +210,11 @@ document.addEventListener('DOMContentLoaded', () => {
     }
 
     // ==========================================================================
-    // Part F: Dynamic 3D Card Interactive Tilt & Glare Tracking Engine
+    // Part 7: 3D Perspective Card Tilt & Interactive Glare Physics
     // ==========================================================================
-    const certCards = document.querySelectorAll('.cert-card-3d');
+    const tiltCards = document.querySelectorAll('.cert-card-3d, .showcase-card');
 
-    certCards.forEach(card => {
+    tiltCards.forEach(card => {
         const glare = card.querySelector('.cert-glare');
 
         card.addEventListener('mousemove', (e) => {
@@ -190,10 +225,10 @@ document.addEventListener('DOMContentLoaded', () => {
             const centerX = rect.width / 2;
             const centerY = rect.height / 2;
             
-            const rotateX = ((y - centerY) / centerY) * -10;
-            const rotateY = ((x - centerX) / centerX) * 10;
+            const rotateX = ((y - centerY) / centerY) * -8;
+            const rotateY = ((x - centerX) / centerX) * 8;
 
-            card.style.transform = `perspective(1000px) rotateX(${rotateX}deg) rotateY(${rotateY}deg) scale(1.02)`;
+            card.style.transform = `perspective(1000px) rotateX(${rotateX}deg) rotateY(${rotateY}deg) translateY(-5px)`;
 
             if (glare) {
                 glare.style.transform = `translate(${x - rect.width}px, ${y - rect.height}px)`;
@@ -201,7 +236,7 @@ document.addEventListener('DOMContentLoaded', () => {
         });
 
         card.addEventListener('mouseleave', () => {
-            card.style.transform = 'perspective(1000px) rotateX(0deg) rotateY(0deg) scale(1)';
+            card.style.transform = 'perspective(1000px) rotateX(0deg) rotateY(0deg) translateY(0px)';
             if (glare) {
                 glare.style.transform = 'translate(0, 0)';
             }
@@ -209,31 +244,31 @@ document.addEventListener('DOMContentLoaded', () => {
     });
 
     // ==========================================================================
-    // Part G: Scrollspy Active Link Navigation Highlighting
+    // Part 8: Scrollspy Active Link Navigation Highlighting
     // ==========================================================================
-    const sections = document.querySelectorAll('section[id]');
+    const sections = document.querySelectorAll('section[id], header[id]');
 
     window.addEventListener('scroll', () => {
-        const scrollY = window.scrollY;
+        const scrollPosition = window.scrollY + 160;
 
         sections.forEach(current => {
             const sectionHeight = current.offsetHeight;
-            const sectionTop = current.offsetTop - 120;
+            const sectionTop = current.offsetTop;
             const sectionId = current.getAttribute('id');
-            const navLink = document.querySelector(`.nav-menu-links a[href*="${sectionId}"]`);
+            const navLink = document.querySelector(`.nav-menu-links a[href*="#${sectionId}"]`);
 
             if (navLink) {
-                if (scrollY > sectionTop && scrollY <= sectionTop + sectionHeight) {
+                if (scrollPosition >= sectionTop && scrollPosition < sectionTop + sectionHeight) {
                     navLink.classList.add('is-active');
                 } else {
                     navLink.classList.remove('is-active');
                 }
             }
         });
-    });
+    }, { passive: true });
 
     // ==========================================================================
-    // Part H: Mobile Horizontal Certification Auto-Swipe Engine (2s Loop)
+    // Part 9: Mobile Horizontal Certification Auto-Swipe Loop (2.5s interval)
     // ==========================================================================
     const certGridContainer = document.querySelector('.certifications-3d-grid');
     const certCardItems = document.querySelectorAll('.cert-card-3d');
@@ -242,11 +277,10 @@ document.addEventListener('DOMContentLoaded', () => {
         let activeCardIndex = 0;
 
         setInterval(() => {
-            // Only execute auto-swipe on mobile viewport (<= 768px)
+            // Only auto-scroll on mobile screens (<= 768px)
             if (window.innerWidth <= 768) {
                 activeCardIndex++;
                 
-                // Reset to start immediately after hitting the end
                 if (activeCardIndex >= certCardItems.length) {
                     activeCardIndex = 0;
                 }
@@ -257,6 +291,6 @@ document.addEventListener('DOMContentLoaded', () => {
                     behavior: 'smooth'
                 });
             }
-        }, 2000);
+        }, 2500);
     }
 });
