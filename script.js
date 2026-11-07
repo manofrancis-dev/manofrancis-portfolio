@@ -1,85 +1,61 @@
 document.addEventListener('DOMContentLoaded', () => {
 
     // ==========================================================================
-    // Part 1: Next-Gen Dual-Ring Interactive Custom Cursor Engine
-    // ==========================================================================
-    const cursorDot = document.getElementById('cursorDot');
-    const cursorOutline = document.getElementById('cursorOutline');
-
-    if (cursorDot && cursorOutline) {
-        let mouseX = window.innerWidth / 2;
-        let mouseY = window.innerHeight / 2;
-        let outlineX = mouseX;
-        let outlineY = mouseY;
-
-        // Track exact cursor position
-        window.addEventListener('mousemove', (e) => {
-            mouseX = e.clientX;
-            mouseY = e.clientY;
-            cursorDot.style.left = `${mouseX}px`;
-            cursorDot.style.top = `${mouseY}px`;
-        });
-
-        // Silky-smooth trailing spring interpolation for the halo outline
-        const renderCursorPhysics = () => {
-            outlineX += (mouseX - outlineX) * 0.18;
-            outlineY += (mouseY - outlineY) * 0.18;
-            cursorOutline.style.left = `${outlineX}px`;
-            cursorOutline.style.top = `${outlineY}px`;
-            requestAnimationFrame(renderCursorPhysics);
-        };
-        renderCursorPhysics();
-
-        // Magnetic hover magnification on interactive targets
-        const interactiveTargets = document.querySelectorAll(
-            'a, button, input, textarea, .interactive-surface, .showcase-card, .cert-card-3d, .avatar-glass-frame, .stack-card'
-        );
-
-        interactiveTargets.forEach(target => {
-            target.addEventListener('mouseenter', () => document.body.classList.add('cursor-hover'));
-            target.addEventListener('mouseleave', () => document.body.classList.remove('cursor-hover'));
-        });
-    }
-
-    // ==========================================================================
-    // Part 2: Ambient Radial Glow Orb Engine (Desktop Mouse & Mobile Touch)
+    // Part A: Interactive Mouse-Chase & Mobile Click/Touch Glow Aura Engine
     // ==========================================================================
     const glowOrbElement = document.getElementById('heroGlowOrb');
 
     if (glowOrbElement) {
-        let orbX = 0;
-        let orbY = 0;
-        let isOrbTicking = false;
+        let mouseX = 0;
+        let mouseY = 0;
+        let isTicking = false;
 
         const updateGlowPosition = (clientX, clientY) => {
-            orbX = clientX - 300;
-            orbY = clientY - 300;
+            mouseX = clientX - 300;
+            mouseY = clientY - 300;
 
-            if (!isOrbTicking) {
+            if (!isTicking) {
                 window.requestAnimationFrame(() => {
-                    glowOrbElement.style.transform = `translate3d(${orbX}px, ${orbY}px, 0)`;
-                    isOrbTicking = false;
+                    glowOrbElement.style.transform = `translate3d(${mouseX}px, ${mouseY}px, 0)`;
+                    isTicking = false;
                 });
-                isOrbTicking = true;
+                isTicking = true;
             }
         };
 
-        window.addEventListener('mousemove', (e) => updateGlowPosition(e.clientX, e.clientY));
-        window.addEventListener('click', (e) => updateGlowPosition(e.clientX, e.clientY));
-        
-        window.addEventListener('touchstart', (e) => {
-            if (e.touches.length > 0) updateGlowPosition(e.touches[0].clientX, e.touches[0].clientY);
-        }, { passive: true });
+        // Laptop Mouse Hover
+        window.addEventListener('mousemove', (event) => {
+            updateGlowPosition(event.clientX, event.clientY);
+        });
 
-        window.addEventListener('touchmove', (e) => {
-            if (e.touches.length > 0) updateGlowPosition(e.touches[0].clientX, e.touches[0].clientY);
-        }, { passive: true });
+        // Mobile Full Body Click / Touch Interaction
+        window.addEventListener('click', (event) => {
+            updateGlowPosition(event.clientX, event.clientY);
+        });
+
+        window.addEventListener('touchstart', (event) => {
+            if (event.touches.length > 0) {
+                updateGlowPosition(event.touches[0].clientX, event.touches[0].clientY);
+            }
+        });
+
+        window.addEventListener('touchmove', (event) => {
+            if (event.touches.length > 0) {
+                updateGlowPosition(event.touches[0].clientX, event.touches[0].clientY);
+            }
+        });
     }
 
     // ==========================================================================
-    // Part 3: High-Performance Scroll Reveal Intersection Observer
+    // Part B: High-Performance Scroll Reveal Intersection Observer
     // ==========================================================================
     const revealTargetNodes = document.querySelectorAll('.reveal-on-scroll');
+
+    const observerConfigOptions = {
+        root: null,
+        threshold: 0.12,
+        rootMargin: '0px 0px -40px 0px'
+    };
 
     const scrollIntersectionObserver = new IntersectionObserver((entries, observer) => {
         entries.forEach(entry => {
@@ -88,16 +64,14 @@ document.addEventListener('DOMContentLoaded', () => {
                 observer.unobserve(entry.target);
             }
         });
-    }, {
-        root: null,
-        threshold: 0.12,
-        rootMargin: '0px 0px -40px 0px'
+    }, observerConfigOptions);
+
+    revealTargetNodes.forEach(node => {
+        scrollIntersectionObserver.observe(node);
     });
 
-    revealTargetNodes.forEach(node => scrollIntersectionObserver.observe(node));
-
     // ==========================================================================
-    // Part 4: Firebase Contact Form Handling Engine (Clear English Feedback)
+    // Part C: Firebase Contact Form Handling Engine
     // ==========================================================================
     const gatewayFormElement = document.getElementById('contactForm');
     const feedbackStatusOutput = document.getElementById('formStatus');
@@ -111,19 +85,14 @@ document.addEventListener('DOMContentLoaded', () => {
             const inputSenderMessage = document.getElementById('userMessage').value.trim();
 
             if (!inputSenderName || !inputSenderEmail || !inputSenderMessage) {
-                renderFormFeedback('Please fill out all fields before sending.', 'error');
+                renderFormFeedback('All fields are strictly required for security validation.', 'error');
                 return;
             }
 
             if (!window.FirebaseEngine) {
-                renderFormFeedback('Unable to connect to the database right now. Please try again.', 'error');
+                renderFormFeedback('System Error: Database connection layer not initialized.', 'error');
                 return;
             }
-
-            const submitBtn = gatewayFormElement.querySelector('button[type="submit"]');
-            const originalBtnText = submitBtn.innerHTML;
-            submitBtn.disabled = true;
-            submitBtn.innerHTML = '<span>Sending Message...</span>';
 
             try {
                 const { getFirestore, collection, addDoc, serverTimestamp } = window.FirebaseEngine;
@@ -136,25 +105,22 @@ document.addEventListener('DOMContentLoaded', () => {
                     timestamp: serverTimestamp()
                 });
 
-                renderFormFeedback('Thank you! Your message has been sent successfully.', 'success');
+                renderFormFeedback('Transmission successful! Connection gateway secured.', 'success');
                 gatewayFormElement.reset();
 
             } catch (runtimeError) {
-                console.error("Database Write Error: ", runtimeError);
-                renderFormFeedback('Failed to send message. Please check your internet connection and try again.', 'error');
-            } finally {
-                submitBtn.disabled = false;
-                submitBtn.innerHTML = originalBtnText;
+                console.error("Database Write Rejection Details: ", runtimeError);
+                renderFormFeedback('Data transmission rejected. Check your connection metrics.', 'error');
             }
         });
     }
 
-    function renderFormFeedback(message, statusType) {
+    function renderFormFeedback(dynamicMessage, feedbackStatusType) {
         if (!feedbackStatusOutput) return;
         
-        feedbackStatusOutput.textContent = message;
+        feedbackStatusOutput.textContent = dynamicMessage;
         feedbackStatusOutput.className = 'form-status-feedback-msg'; 
-        feedbackStatusOutput.classList.add(statusType);
+        feedbackStatusOutput.classList.add(feedbackStatusType);
 
         setTimeout(() => {
             feedbackStatusOutput.textContent = '';
@@ -163,7 +129,7 @@ document.addEventListener('DOMContentLoaded', () => {
     }
 
     // ==========================================================================
-    // Part 5: Mobile Navigation Drawer Toggle Logic
+    // Part D: Mobile System Navigation Drawer Toggle Logic
     // ==========================================================================
     const menuToggleBtn = document.getElementById('mobileMenuBtn');
     const menuLinksTray = document.getElementById('navMenuLinks');
@@ -173,7 +139,6 @@ document.addEventListener('DOMContentLoaded', () => {
         const toggleMenuContext = () => {
             menuToggleBtn.classList.toggle('is-active');
             menuLinksTray.classList.toggle('is-active');
-            menuToggleBtn.setAttribute('aria-expanded', menuLinksTray.classList.contains('is-active'));
         };
 
         menuToggleBtn.addEventListener('click', toggleMenuContext);
@@ -188,7 +153,7 @@ document.addEventListener('DOMContentLoaded', () => {
     }
 
     // ==========================================================================
-    // Part 6: Smooth Scroll Back to Top Button
+    // Part E: Premium Top-to-Bottom Window Scrolling Engine
     // ==========================================================================
     const backToTopBtn = document.getElementById('backToTopBtn');
 
@@ -199,7 +164,7 @@ document.addEventListener('DOMContentLoaded', () => {
             } else {
                 backToTopBtn.classList.remove('is-visible');
             }
-        }, { passive: true });
+        });
 
         backToTopBtn.addEventListener('click', () => {
             window.scrollTo({
@@ -210,11 +175,11 @@ document.addEventListener('DOMContentLoaded', () => {
     }
 
     // ==========================================================================
-    // Part 7: 3D Perspective Card Tilt & Interactive Glare Physics
+    // Part F: Dynamic 3D Card Interactive Tilt & Glare Tracking Engine
     // ==========================================================================
-    const tiltCards = document.querySelectorAll('.cert-card-3d, .showcase-card');
+    const certCards = document.querySelectorAll('.cert-card-3d');
 
-    tiltCards.forEach(card => {
+    certCards.forEach(card => {
         const glare = card.querySelector('.cert-glare');
 
         card.addEventListener('mousemove', (e) => {
@@ -225,10 +190,10 @@ document.addEventListener('DOMContentLoaded', () => {
             const centerX = rect.width / 2;
             const centerY = rect.height / 2;
             
-            const rotateX = ((y - centerY) / centerY) * -8;
-            const rotateY = ((x - centerX) / centerX) * 8;
+            const rotateX = ((y - centerY) / centerY) * -10;
+            const rotateY = ((x - centerX) / centerX) * 10;
 
-            card.style.transform = `perspective(1000px) rotateX(${rotateX}deg) rotateY(${rotateY}deg) translateY(-5px)`;
+            card.style.transform = `perspective(1000px) rotateX(${rotateX}deg) rotateY(${rotateY}deg) scale(1.02)`;
 
             if (glare) {
                 glare.style.transform = `translate(${x - rect.width}px, ${y - rect.height}px)`;
@@ -236,7 +201,7 @@ document.addEventListener('DOMContentLoaded', () => {
         });
 
         card.addEventListener('mouseleave', () => {
-            card.style.transform = 'perspective(1000px) rotateX(0deg) rotateY(0deg) translateY(0px)';
+            card.style.transform = 'perspective(1000px) rotateX(0deg) rotateY(0deg) scale(1)';
             if (glare) {
                 glare.style.transform = 'translate(0, 0)';
             }
@@ -244,31 +209,31 @@ document.addEventListener('DOMContentLoaded', () => {
     });
 
     // ==========================================================================
-    // Part 8: Scrollspy Active Link Navigation Highlighting
+    // Part G: Scrollspy Active Link Navigation Highlighting
     // ==========================================================================
-    const sections = document.querySelectorAll('section[id], header[id]');
+    const sections = document.querySelectorAll('section[id]');
 
     window.addEventListener('scroll', () => {
-        const scrollPosition = window.scrollY + 160;
+        const scrollY = window.scrollY;
 
         sections.forEach(current => {
             const sectionHeight = current.offsetHeight;
-            const sectionTop = current.offsetTop;
+            const sectionTop = current.offsetTop - 120;
             const sectionId = current.getAttribute('id');
-            const navLink = document.querySelector(`.nav-menu-links a[href*="#${sectionId}"]`);
+            const navLink = document.querySelector(`.nav-menu-links a[href*="${sectionId}"]`);
 
             if (navLink) {
-                if (scrollPosition >= sectionTop && scrollPosition < sectionTop + sectionHeight) {
+                if (scrollY > sectionTop && scrollY <= sectionTop + sectionHeight) {
                     navLink.classList.add('is-active');
                 } else {
                     navLink.classList.remove('is-active');
                 }
             }
         });
-    }, { passive: true });
+    });
 
     // ==========================================================================
-    // Part 9: Mobile Horizontal Certification Auto-Swipe Loop (2.5s interval)
+    // Part H: Mobile Horizontal Certification Auto-Swipe Engine (2s Loop)
     // ==========================================================================
     const certGridContainer = document.querySelector('.certifications-3d-grid');
     const certCardItems = document.querySelectorAll('.cert-card-3d');
@@ -277,10 +242,11 @@ document.addEventListener('DOMContentLoaded', () => {
         let activeCardIndex = 0;
 
         setInterval(() => {
-            // Only auto-scroll on mobile screens (<= 768px)
+            // Only execute auto-swipe on mobile viewport (<= 768px)
             if (window.innerWidth <= 768) {
                 activeCardIndex++;
                 
+                // Reset to start immediately after hitting the end
                 if (activeCardIndex >= certCardItems.length) {
                     activeCardIndex = 0;
                 }
@@ -291,6 +257,6 @@ document.addEventListener('DOMContentLoaded', () => {
                     behavior: 'smooth'
                 });
             }
-        }, 2500);
+        }, 2000);
     }
 });
