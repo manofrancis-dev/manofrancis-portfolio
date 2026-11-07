@@ -48,7 +48,7 @@
     <!-- Font Architecture & Layout Icons Layer -->
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Plus+Jakarta+Sans:wght@500;600;700;800&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-    <link rel="stylesheet" href="style.css">
+    <link rel="stylesheet" href="style.css?v=2.1">
 
     <!-- Structured Data JSON-LD -->
     <script type="application/ld+json">
@@ -115,6 +115,57 @@
       .skip-link { position: fixed; left: 12px; top: -60px; z-index: 9999; padding: 10px 14px; border-radius: 8px; background: #0b1220; color: #fff; border: 1px solid rgba(255,255,255,.25); text-decoration: none; transition: top .2s ease; }
       .skip-link:focus { top: 12px; }
       .showcase-proof-line { margin-top: 12px; font-size: .8rem; letter-spacing: .02em; opacity: .8; }
+
+      /* Live Green Pulse Radar Animation */
+      .badge-pill {
+          display: inline-flex;
+          align-items: center;
+          gap: 10px;
+          background: rgba(16, 185, 129, 0.08);
+          border: 1px solid rgba(16, 185, 129, 0.25);
+          padding: 6px 16px;
+          border-radius: 30px;
+          font-size: 0.85rem;
+          font-weight: 600;
+          color: #34d399;
+          margin-bottom: 22px;
+          width: fit-content;
+          box-shadow: 0 0 20px rgba(16, 185, 129, 0.1);
+      }
+      .pulse-indicator {
+          width: 9px;
+          height: 9px;
+          background-color: #10b981;
+          border-radius: 50%;
+          position: relative;
+          display: inline-block;
+          box-shadow: 0 0 8px #10b981;
+          flex-shrink: 0;
+      }
+      .pulse-indicator::after {
+          content: '';
+          position: absolute;
+          top: 50%;
+          left: 50%;
+          transform: translate(-50%, -50%);
+          width: 100%;
+          height: 100%;
+          background-color: #10b981;
+          border-radius: 50%;
+          animation: livePulseRadar 1.8s ease-out infinite;
+      }
+      @keyframes livePulseRadar {
+          0% {
+              width: 100%;
+              height: 100%;
+              opacity: 0.8;
+          }
+          100% {
+              width: 340%;
+              height: 340%;
+              opacity: 0;
+          }
+      }
     </style>
 </head>
 <body>
