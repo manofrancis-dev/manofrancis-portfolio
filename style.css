@@ -161,12 +161,10 @@ body {
     .mobile-nav-toggle.is-active .bar:nth-child(2) { opacity: 0; }
     .mobile-nav-toggle.is-active .bar:nth-child(3) { transform: translateY(-8px) rotate(-45deg); }
 
-    /* Mobile Interactive Glow Enable */
     .interactive-glow-orb {
         display: block !important;
     }
 
-    /* Mobile Certifications Horizontal Layout */
     .certifications-3d-grid {
         display: flex !important;
         overflow-x: auto !important;
@@ -202,6 +200,12 @@ body {
     min-height: 100vh; display: flex; align-items: center; justify-content: center;
     padding: 140px 0 60px 0;
 }
+.hero-split-grid {
+    width: 100%; max-width: 1200px; margin: 0 auto; padding: 0 40px;
+    display: grid; grid-template-columns: 1.2fr 0.8fr; gap: 60px; align-items: center;
+}
+.hero-text-align-left { text-align: left; }
+
 /* Live Status Green Pill & Radar Animation */
 .badge-pill {
     display: inline-flex;
@@ -219,7 +223,6 @@ body {
     box-shadow: 0 0 20px rgba(16, 185, 129, 0.1);
 }
 
-/* Glowing Pulsing Green Ball */
 .pulse-indicator {
     width: 9px;
     height: 9px;
@@ -230,7 +233,6 @@ body {
     box-shadow: 0 0 8px #10b981;
 }
 
-/* Live Expanding Pulse Wave Effect */
 .pulse-indicator::after {
     content: '';
     position: absolute;
@@ -256,11 +258,7 @@ body {
         opacity: 0;
     }
 }
-.hero-split-grid {
-    width: 100%; max-width: 1200px; margin: 0 auto; padding: 0 40px;
-    display: grid; grid-template-columns: 1.2fr 0.8fr; gap: 60px; align-items: center;
-}
-.hero-text-align-left { text-align: left; }
+
 .hero-text-align-left .hero-title-main {
     font-family: var(--font-stack-heading); font-weight: 800; font-size: 4rem;
     line-height: 1.1; color: var(--text-primary-high); letter-spacing: -2px; margin-bottom: 20px;
