@@ -600,6 +600,13 @@ body {
     .avatar-glass-frame { width: 240px; height: 310px; }
     .footer-container { padding: 0 20px; }
     .footer-top-row { flex-direction: column; }
+    .footer-meta-row {
+        flex-direction: column-reverse;
+        align-items: center;
+        text-align: center;
+        gap: 16px;
+        padding-bottom: 30px;
+    }
     .scroll-top-trigger {
         bottom: 20px;
         right: 20px;
